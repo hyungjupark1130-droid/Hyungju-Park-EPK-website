@@ -1,0 +1,116 @@
+---
+import { getEntry } from 'astro:content';
+
+const settings = await getEntry('settings', 'index');
+const { contact_email = '', socials = [] } = settings?.data ?? {};
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__inner container">
+    <div class="footer__left">
+      <span class="footer__name">Hyungju Park</span>
+      <span class="footer__copy">© {year}</span>
+    </div>
+    <div class="footer__right">
+      {
+        contact_email && (
+          <a href={`mailto:${contact_email}`} class="footer__email">
+            {contact_email}
+          </a>
+        )
+      }
+      {
+        socials.length > 0 && (
+          <div class="footer__socials">
+            {socials.map((s) => (
+              <a
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__social"
+              >
+                {s.platform}
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--gray-rule);
+    padding-block: 2.5rem;
+    margin-top: 6rem;
+  }
+
+  .footer__inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .footer__left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .footer__name {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-variation-settings: 'opsz' 12;
+  }
+
+  .footer__copy {
+    font-size: 0.78rem;
+    color: var(--gray-mid);
+  }
+
+  .footer__right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+
+  .footer__email {
+    font-size: 0.82rem;
+    color: var(--gray-mid);
+    transition: color var(--transition);
+  }
+
+  .footer__email:hover {
+    color: var(--black);
+  }
+
+  .footer__socials {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer__social {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    transition: color var(--transition);
+  }
+
+  .footer__social:hover {
+    color: var(--black);
+  }
+
+  @media (max-width: 500px) {
+    .footer__right {
+      align-items: flex-start;
+    }
+  }
+</style>

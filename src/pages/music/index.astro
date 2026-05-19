@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { getCollection } from 'astro:content';
+
+const allWorks = await getCollection('works');
+const works = allWorks.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const typeFilters = ['Original', 'Production', 'Arrangement', 'Engineering', 'Score'] as const;
+const allTags = [...new Set(works.flatMap((w) => w.data.tags))].filter(Boolean).sort();
+---
+
+<BaseLayout title="Music" description="Music portfolio and EPK — Hyungju Park">
+  <div class="music-page container">
+    <header class="page-header" data-animate>
+      <h1 class="page-header__title">Music</h1>
+    </header>
+
+    <div class="filter-bar" data-animate aria-label="Filter works">
+      <button class="chip chip--active" data-filter="all">All</button>
+      {typeFilters.map((t) => <button class="chip" data-filter={t}>{t}</button>)}
+      {allTags.map((tag) => <button class="chip" data-filter={tag}>{tag}</button>)}
+    </div>
+
+    {
+      works.length > 0 ? (
+        <div class="works-grid" id="works-grid" aria-live="polite">
+          {works.map((work) => (
+            <WorkCard
+              slug={work.slug}
+              title={work.data.title}
+              year={work.data.year}
+              type={work.data.type}
+              cover={work.data.cover}
+              tags={work.data.tags}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty">No works yet — check back soon.</p>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .music-page {
+    padding-top: calc(80px + 4rem);
+    padding-bottom: 6rem;
+  }
+
+  .page-header {
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray-rule);
+  }
+
+  .page-header__title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .chip {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--gray-rule);
+    background: none;
+    color: var(--gray-mid);
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition), color var(--transition);
+  }
+
+  .chip:hover {
+    border-color: var(--fg);
+    color: var(--fg);
+  }
+
+  .chip--active {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+  }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 3rem 2.5rem;
+  }
+
+  .empty {
+    color: var(--gray-mid);
+    font-size: 0.9rem;
+    padding-block: 4rem;
+  }
+</style>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+  const cards = document.querySelectorAll<HTMLElement>('.work-card');
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const filter = chip.dataset.filter ?? 'all';
+
+      chips.forEach((c) => c.classList.remove('chip--active'));
+      chip.classList.add('chip--active');
+
+      cards.forEach((card) => {
+        if (filter === 'all') {
+          card.classList.remove('hidden');
+          return;
+        }
+        const type = card.dataset.type ?? '';
+        const tags = card.dataset.tags ? card.dataset.tags.split(',') : [];
+        card.classList.toggle('hidden', type !== filter && !tags.includes(filter));
+      });
+    });
+  });
+</script>

@@ -1,0 +1,14 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[headers]]
+  for = "/uploads/*"
+  [headers.values]
+    Content-Disposition = "inline"
+    X-Content-Type-Options = "nosniff"
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin/index.html"
+  status = 200

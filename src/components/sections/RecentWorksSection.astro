@@ -1,0 +1,131 @@
+---
+import { getEntry } from 'astro:content';
+
+const about = await getEntry('about', 'index');
+const recent_works = about?.data.recent_works ?? [];
+---
+
+<section id="recent-works" class="scroll-section">
+  <div class="container">
+    <div class="scroll-section__head" data-animate>
+      <h2 class="scroll-section__title">Recent Works</h2>
+      <a href="/recent-works" class="scroll-section__more">Full list →</a>
+    </div>
+
+    {
+      recent_works.length > 0 ? (
+        <ul class="rw-list" data-animate role="list">
+          {recent_works.map((w) => (
+            <li class="rw-item">
+              <div class="rw-item__main">
+                {w.url ? (
+                  <a
+                    href={w.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="rw-item__title rw-item__title--link"
+                  >
+                    {w.title} ↗
+                  </a>
+                ) : (
+                  <span class="rw-item__title">{w.title}</span>
+                )}
+                {w.description && (
+                  <span class="rw-item__desc">{w.description}</span>
+                )}
+              </div>
+              {w.year && <span class="rw-item__year">{w.year}</span>}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="empty">No recent works listed yet.</p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .scroll-section {
+    padding-block: 7rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .scroll-section__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+  }
+
+  .scroll-section__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .scroll-section__more {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color var(--transition);
+  }
+
+  .scroll-section__more:hover { color: var(--fg); }
+
+  .rw-list { list-style: none; }
+
+  .rw-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .rw-item:first-child { border-top: 1px solid var(--border); }
+
+  .rw-item__main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .rw-item__title {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .rw-item__title--link {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1px;
+    transition: border-color var(--transition), color var(--transition);
+    width: fit-content;
+  }
+
+  .rw-item__title--link:hover { border-color: var(--fg); }
+
+  .rw-item__desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .rw-item__year {
+    font-size: 0.78rem;
+    color: var(--muted);
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .empty {
+    color: var(--muted);
+    font-size: 0.9rem;
+    padding-block: 2rem;
+  }
+</style>

@@ -1,0 +1,203 @@
+---
+import { getEntry } from 'astro:content';
+
+const settings = await getEntry('settings', 'index');
+const { contact_email = '', socials = [] } = settings?.data ?? {};
+---
+
+<section id="contact" class="scroll-section">
+  <div class="container">
+    <div class="scroll-section__head" data-animate>
+      <h2 class="scroll-section__title">Contact</h2>
+    </div>
+
+    <div class="contact-body" data-animate>
+      {
+        contact_email && (
+          <div class="block">
+            <span class="label">Email</span>
+            <a href={`mailto:${contact_email}`} class="contact-email">
+              {contact_email}
+            </a>
+          </div>
+        )
+      }
+
+      {
+        socials.length > 0 && (
+          <div class="block">
+            <span class="label">Elsewhere</span>
+            <div class="socials">
+              {socials.map((s) => (
+                <a href={s.url} target="_blank" rel="noopener noreferrer" class="social">
+                  {s.platform} ↗
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      <div class="block form-block">
+        <span class="label">Send a message</span>
+        <form
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          class="form"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="honeypot" aria-hidden="true">
+            <label>Skip this: <input name="bot-field" /></label>
+          </p>
+          <div class="field">
+            <label for="cs-name" class="field-label">Name</label>
+            <input type="text" id="cs-name" name="name" class="input" required autocomplete="name" />
+          </div>
+          <div class="field">
+            <label for="cs-email" class="field-label">Your email</label>
+            <input type="email" id="cs-email" name="email" class="input" required autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="cs-message" class="field-label">Message</label>
+            <textarea id="cs-message" name="message" rows="4" class="input textarea" required></textarea>
+          </div>
+          <button type="submit" class="submit">Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .scroll-section {
+    padding-block: 7rem 10rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .scroll-section__head {
+    margin-bottom: 3rem;
+  }
+
+  .scroll-section__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .contact-body {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .contact-email {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    letter-spacing: 0.04em;
+    transition: color var(--transition);
+  }
+
+  .contact-email:hover { color: var(--muted); }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+  }
+
+  .social {
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: color var(--transition);
+  }
+
+  .social:hover { color: var(--muted); }
+
+  .form-block {
+    grid-column: 1 / -1;
+    max-width: 560px;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .honeypot { display: none; }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .field-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .input {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--fg);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 0;
+    outline: none;
+    width: 100%;
+    transition: border-color var(--transition);
+  }
+
+  .input:focus { border-color: var(--fg); }
+  .textarea { resize: vertical; min-height: 100px; }
+
+  .submit {
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--fg);
+    color: var(--bg);
+    border: none;
+    padding: 0.85rem 2.25rem;
+    cursor: pointer;
+    transition: opacity var(--transition);
+  }
+
+  .submit:hover { opacity: 0.75; }
+
+  @media (max-width: 640px) {
+    .contact-body {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+</style>

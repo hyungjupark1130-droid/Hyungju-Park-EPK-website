@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, getEntry } from 'astro:content';
+import MusicSection from '../components/sections/MusicSection.astro';
+import RecentWorksSection from '../components/sections/RecentWorksSection.astro';
+import AboutSection from '../components/sections/AboutSection.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+
+const about = await getEntry('about', 'index');
+const shortBio = about?.data.short_bio ?? '';
+---
+
+<BaseLayout title="Home">
+  <!-- ── Hero ── -->
+  <section id="hero" class="hero">
+    <div class="hero__grid container">
+      <div class="hero__text">
+        <h1 class="hero__name">
+          <span class="hero__name-line">Hyungju</span>
+          <span class="hero__name-line">Park</span>
+        </h1>
+        <div class="hero__meta">
+          <span class="hero__discipline">Musician&thinsp;·&thinsp;Producer&thinsp;·&thinsp;Engineer</span>
+          <span class="hero__school">Guildhall School of Music</span>
+        </div>
+        <div class="hero__scroll-hint" aria-hidden="true">
+          <a href="#music" class="scroll-cta">
+            <span class="scroll-cta__label">Scroll</span>
+            <span class="scroll-cta__line"></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero__image-col" aria-hidden="true">
+        <img
+          src="/ascii-art.png"
+          alt=""
+          class="hero__image"
+          fetchpriority="high"
+          draggable="false"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Scrollable sections ── -->
+  <MusicSection />
+  <RecentWorksSection />
+  <AboutSection />
+  <ContactSection />
+</BaseLayout>
+
+<style>
+  /* ── Hero ── */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    width: 100%;
+    min-height: 100svh;
+  }
+
+  .hero__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    padding-block: 8rem 4rem;
+    z-index: 1;
+  }
+
+  .hero__name {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 12vw, 11rem);
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    color: var(--fg);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero__name-line { display: block; }
+
+  .hero__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    border-left: 1px solid var(--border);
+    padding-left: 1.25rem;
+  }
+
+  .hero__discipline {
+    font-size: clamp(0.68rem, 1vw, 0.82rem);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero__school {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .hero__scroll-hint {
+    margin-top: 1rem;
+  }
+
+  .scroll-cta {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+
+  .scroll-cta__label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color var(--transition);
+  }
+
+  .scroll-cta:hover .scroll-cta__label { color: var(--fg); }
+
+  .scroll-cta__line {
+    display: block;
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--muted), transparent);
+    animation: lineDrop 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes lineDrop {
+    0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+    50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+    100% { transform: scaleY(1); transform-origin: top; opacity: 0; }
+  }
+
+  .hero__image-col {
+    position: relative;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    opacity: 0.85;
+    mix-blend-mode: lighten;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .hero__image-col::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, var(--bg) 0%, transparent 30%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 768px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+      position: relative;
+    }
+
+    .hero__text {
+      padding-top: 10rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero__image-col {
+      position: absolute;
+      inset: 0;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .hero__image { opacity: 0.2; }
+
+    .hero__image-col::before {
+      background: linear-gradient(to bottom, transparent 0%, var(--bg) 70%);
+    }
+  }
+</style>

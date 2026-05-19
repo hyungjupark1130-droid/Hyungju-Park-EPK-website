@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getEntry } from 'astro:content';
+
+const about = await getEntry('about', 'index');
+const recent_works = about?.data.recent_works ?? [];
+---
+
+<BaseLayout title="Recent Works" description="Recent works by Hyungju Park.">
+  <div class="rw-page container">
+    <header class="page-header" data-animate>
+      <h1 class="page-header__title">Recent Works</h1>
+    </header>
+
+    {
+      recent_works.length > 0 ? (
+        <ul class="rw-list" data-animate role="list">
+          {recent_works.map((w) => (
+            <li class="rw-item">
+              <div class="rw-item__main">
+                {w.url ? (
+                  <a
+                    href={w.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="rw-item__title rw-item__title--link"
+                  >
+                    {w.title} ↗
+                  </a>
+                ) : (
+                  <span class="rw-item__title">{w.title}</span>
+                )}
+                {w.description && (
+                  <span class="rw-item__desc">{w.description}</span>
+                )}
+              </div>
+              {w.year && <span class="rw-item__year">{w.year}</span>}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="empty">No recent works listed yet.</p>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .rw-page {
+    padding-top: calc(80px + 4rem);
+    padding-bottom: 6rem;
+    max-width: 820px;
+  }
+
+  .page-header {
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-header__title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+
+  .rw-list { list-style: none; }
+
+  .rw-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .rw-item__main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .rw-item__title {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .rw-item__title--link {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1px;
+    transition: border-color var(--transition), color var(--transition);
+    width: fit-content;
+  }
+
+  .rw-item__title--link:hover { border-color: var(--fg); }
+
+  .rw-item__desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 540px;
+  }
+
+  .rw-item__year {
+    font-size: 0.82rem;
+    color: var(--muted);
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .empty {
+    color: var(--muted);
+    font-size: 0.9rem;
+    padding-block: 4rem;
+  }
+</style>

@@ -1,0 +1,142 @@
+---
+import WorkCard from '../WorkCard.astro';
+import { getCollection } from 'astro:content';
+
+const allWorks = await getCollection('works');
+const works = allWorks.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const typeFilters = ['Original', 'Production', 'Arrangement', 'Engineering', 'Score'] as const;
+const allTags = [...new Set(works.flatMap((w) => w.data.tags))].filter(Boolean).sort();
+---
+
+<section id="music" class="scroll-section">
+  <div class="container">
+    <div class="scroll-section__head" data-animate>
+      <h2 class="scroll-section__title">Music</h2>
+      <a href="/music" class="scroll-section__more">Full portfolio →</a>
+    </div>
+
+    <div class="filter-bar" data-animate aria-label="Filter works">
+      <button class="chip chip--active" data-filter="all">All</button>
+      {typeFilters.map((t) => <button class="chip" data-filter={t}>{t}</button>)}
+      {allTags.map((tag) => <button class="chip" data-filter={tag}>{tag}</button>)}
+    </div>
+
+    {
+      works.length > 0 ? (
+        <div class="works-grid" id="works-grid-home">
+          {works.map((work) => (
+            <WorkCard
+              slug={work.slug}
+              title={work.data.title}
+              year={work.data.year}
+              type={work.data.type}
+              cover={work.data.cover}
+              tags={work.data.tags}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty">No works yet — check back soon.</p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .scroll-section {
+    padding-block: 7rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .scroll-section__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+  }
+
+  .scroll-section__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .scroll-section__more {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color var(--transition);
+  }
+
+  .scroll-section__more:hover { color: var(--fg); }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .chip {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition), color var(--transition);
+  }
+
+  .chip:hover {
+    border-color: var(--fg);
+    color: var(--fg);
+  }
+
+  .chip--active {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+  }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 3rem 2.5rem;
+  }
+
+  .empty {
+    color: var(--muted);
+    font-size: 0.9rem;
+    padding-block: 4rem;
+  }
+</style>
+
+<script>
+  const section = document.querySelector('#works-grid-home');
+  if (section) {
+    const chips = section.closest('section')?.querySelectorAll<HTMLButtonElement>('.chip') ?? [];
+    const cards = section.querySelectorAll<HTMLElement>('.work-card');
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const filter = chip.dataset.filter ?? 'all';
+        chips.forEach((c) => c.classList.remove('chip--active'));
+        chip.classList.add('chip--active');
+        cards.forEach((card) => {
+          if (filter === 'all') { card.classList.remove('hidden'); return; }
+          const type = card.dataset.type ?? '';
+          const tags = card.dataset.tags ? card.dataset.tags.split(',') : [];
+          card.classList.toggle('hidden', type !== filter && !tags.includes(filter));
+        });
+      });
+    });
+  }
+</script>

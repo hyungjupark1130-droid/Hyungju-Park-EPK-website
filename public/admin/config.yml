@@ -1,0 +1,120 @@
+# ── Decap CMS Configuration ──────────────────────────────────────────────────
+# Before deploying:
+#   1. Replace YOUR-GITHUB-USERNAME and YOUR-REPO-NAME below
+#   2. In Netlify: Site configuration → Identity → Enable, then set GitHub as provider
+#   3. Under Git Gateway, click "Enable Git Gateway"
+
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/uploads
+public_folder: /uploads
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+
+# ── Collections ───────────────────────────────────────────────────────────────
+
+collections:
+  # Works — each markdown file = one portfolio item
+  - name: works
+    label: Works
+    label_singular: Work
+    folder: src/content/works
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
+      - { name: year, label: Year, widget: number, value_type: int }
+      - name: type
+        label: Type
+        widget: select
+        options: [Original, Production, Arrangement, Engineering, Score]
+      - { name: role, label: 'Role (e.g. Producer, Mix Engineer)', widget: string, required: false }
+      - { name: cover, label: Cover Image, widget: image, required: false }
+      - name: audio
+        label: Audio File
+        widget: file
+        required: false
+        hint: 'MP3 or AAC. Streaming only — no downloads.'
+      - name: video_url
+        label: Video URL
+        widget: string
+        required: false
+        hint: 'YouTube or Vimeo URL'
+      - name: external_links
+        label: External Links
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Label, widget: string, hint: 'e.g. Spotify, Bandcamp' }
+          - { name: url, label: URL, widget: string }
+      - { name: credits, label: Credits, widget: text, required: false, hint: 'Collaborators, performers, etc.' }
+      - { name: featured, label: 'Featured on homepage', widget: boolean, default: false }
+      - name: tags
+        label: Tags
+        widget: list
+        required: false
+        hint: 'e.g. jazz, electronic, film'
+      - { name: description, label: Short Description, widget: text, required: false }
+      - { name: body, label: 'Extended Notes', widget: markdown, required: false }
+
+  # About — singleton page
+  - name: about
+    label: About
+    files:
+      - name: index
+        label: About Page
+        file: src/content/about/index.yaml
+        fields:
+          - { name: short_bio, label: 'Short Bio (used on homepage)', widget: text }
+          - { name: long_bio, label: 'Long Bio (About page)', widget: text }
+          - { name: portrait, label: Portrait Photo, widget: image, required: false }
+          - { name: currently, label: '"Currently" line', widget: string, hint: 'Short status shown on About page' }
+          - name: recent_works
+            label: Recent Works
+            widget: list
+            required: false
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: description, label: Description, widget: text, required: false }
+              - { name: url, label: Link URL, widget: string, required: false, hint: 'e.g. https://soundcloud.com/...' }
+              - { name: year, label: Year, widget: number, value_type: int, required: false }
+          - name: credits_recording
+            label: Engineering Credits
+            widget: list
+            required: false
+            fields:
+              - { name: project, label: Project, widget: string }
+              - { name: role, label: Role, widget: string }
+              - { name: year, label: Year, widget: number, value_type: int }
+          - name: cv
+            label: Education / CV
+            widget: list
+            required: false
+            fields:
+              - { name: institution, label: Institution, widget: string }
+              - { name: program, label: Program, widget: string }
+              - { name: years, label: Years, widget: string, hint: 'e.g. 2023–present' }
+
+  # Site Settings — singleton
+  - name: settings
+    label: Site Settings
+    files:
+      - name: index
+        label: Settings
+        file: src/content/settings/index.yaml
+        fields:
+          - { name: contact_email, label: Contact Email, widget: string }
+          - name: socials
+            label: Social Links
+            widget: list
+            fields:
+              - { name: platform, label: Platform, widget: string, hint: 'e.g. Instagram, SoundCloud' }
+              - { name: url, label: URL, widget: string }
+          - { name: meta_description, label: Meta Description, widget: text, required: false }
+          - { name: og_image, label: 'Open Graph Image', widget: image, required: false }

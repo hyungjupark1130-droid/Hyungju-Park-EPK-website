@@ -1,0 +1,237 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getEntry } from 'astro:content';
+
+const settings = await getEntry('settings', 'index');
+const { contact_email = '', socials = [] } = settings?.data ?? {};
+---
+
+<BaseLayout title="Contact" description="Get in touch with Hyungju Park.">
+  <div class="contact container">
+    <header class="page-header" data-animate>
+      <h1 class="page-header__title">Contact</h1>
+    </header>
+
+    <div class="contact__body">
+      {
+        contact_email && (
+          <div class="contact__block" data-animate>
+            <span class="label">Email</span>
+            <a href={`mailto:${contact_email}`} class="contact__email">
+              {contact_email}
+            </a>
+          </div>
+        )
+      }
+
+      {
+        socials.length > 0 && (
+          <div class="contact__block" data-animate>
+            <span class="label">Elsewhere</span>
+            <div class="contact__socials">
+              {socials.map((s) => (
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="contact__social"
+                >
+                  {s.platform} ↗
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      <div class="contact__block contact__form-block" data-animate>
+        <span class="label">Send a message</span>
+        <form
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          class="form"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="form__honeypot" aria-hidden="true">
+            <label>Don't fill this out: <input name="bot-field" /></label>
+          </p>
+          <div class="form__field">
+            <label for="f-name" class="form__label">Name</label>
+            <input
+              type="text"
+              id="f-name"
+              name="name"
+              class="form__input"
+              required
+              autocomplete="name"
+            />
+          </div>
+          <div class="form__field">
+            <label for="f-email" class="form__label">Your email</label>
+            <input
+              type="email"
+              id="f-email"
+              name="email"
+              class="form__input"
+              required
+              autocomplete="email"
+            />
+          </div>
+          <div class="form__field">
+            <label for="f-message" class="form__label">Message</label>
+            <textarea
+              id="f-message"
+              name="message"
+              rows="5"
+              class="form__input form__textarea"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="form__submit">Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact {
+    padding-top: calc(80px + 4rem);
+    padding-bottom: 6rem;
+    max-width: 640px;
+  }
+
+  .page-header {
+    margin-bottom: 4rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray-rule);
+  }
+
+  .page-header__title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+
+  .contact__body {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .contact__block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+  }
+
+  .contact__email {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-weight: 300;
+    font-variation-settings: 'opsz' 18;
+    transition: color var(--transition);
+  }
+
+  .contact__email:hover {
+    color: var(--gray-mid);
+  }
+
+  .contact__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
+  }
+
+  .contact__social {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    transition: color var(--transition);
+  }
+
+  .contact__social:hover {
+    color: var(--gray-mid);
+  }
+
+  .contact__form-block {
+    border-top: 1px solid var(--gray-rule);
+    padding-top: 3rem;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .form__honeypot {
+    display: none;
+  }
+
+  .form__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form__label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+  }
+
+  .form__input {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--black);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--gray-rule);
+    padding: 0.5rem 0;
+    outline: none;
+    width: 100%;
+    transition: border-color var(--transition);
+  }
+
+  .form__input:focus {
+    border-color: var(--fg);
+  }
+
+  .form__textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .form__submit {
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--fg);
+    color: var(--bg);
+    border: none;
+    padding: 0.9rem 2.5rem;
+    cursor: pointer;
+    transition: opacity var(--transition);
+  }
+
+  .form__submit:hover { opacity: 0.75; }
+  .form__submit:active { opacity: 1; }
+</style>
