@@ -9,7 +9,7 @@ backend:
   repo: hyungjupark1130-droid/Hyungju-Park-EPK-website
   branch: main
   auth_type: pkce
-  app_id: 3768413
+  app_id: Iv23li1okQvdsYdZrQsf
 
 media_folder: public/uploads
 public_folder: /uploads
