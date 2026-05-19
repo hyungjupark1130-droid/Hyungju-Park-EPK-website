@@ -31,6 +31,7 @@ const pageTitle = title === 'Home' ? 'Hyungju Park' : `${title} — Hyungju Park
     {ogImage && <meta property="og:image" content={ogImage} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap.xml" />
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
     <Nav />
@@ -38,6 +39,18 @@ const pageTitle = title === 'Home' ? 'Hyungju Park' : `${title} — Hyungju Park
       <slot />
     </main>
     <Footer />
+
+    <script is:inline>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', (user) => {
+          if (!user) {
+            window.netlifyIdentity.on('login', () => {
+              document.location.href = '/admin/';
+            });
+          }
+        });
+      }
+    </script>
 
     <script>
       const observer = new IntersectionObserver(
