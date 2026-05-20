@@ -31,7 +31,6 @@ const allTags = [...new Set(works.flatMap((w) => w.data.tags))].filter(Boolean).
               title={work.data.title}
               year={work.data.year}
               type={work.data.type}
-              cover={work.data.cover}
               tags={work.data.tags}
             />
           ))}
@@ -95,9 +94,8 @@ const allTags = [...new Set(works.flatMap((w) => w.data.tags))].filter(Boolean).
   }
 
   .works-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
   }
 
   .empty {
