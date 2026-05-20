@@ -15,7 +15,7 @@ const { slug, title, year, type, cover, tags = [] } = Astro.props;
   <a href={`/music/${slug}`} class="work-card__link">
     <div class="work-card__img-wrap">
       {cover
-        ? <img src={cover} alt={title} loading="lazy" class="work-card__img" />
+        ? <img src={cover} alt={title} loading="lazy" class="work-card__img" width="480" height="480" />
         : <div class="work-card__no-cover" aria-hidden="true"></div>
       }
     </div>
@@ -51,13 +51,7 @@ const { slug, title, year, type, cover, tags = [] } = Astro.props;
   }
 
   .work-card__no-cover {
-    background: repeating-linear-gradient(
-      45deg,
-      var(--border) 0px,
-      var(--border) 1px,
-      transparent 1px,
-      transparent 8px
-    );
+    background: var(--raised);
   }
 
   .work-card__link:hover .work-card__img {

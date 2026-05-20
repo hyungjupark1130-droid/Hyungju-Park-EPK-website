@@ -36,7 +36,6 @@ collections:
         widget: select
         options: [Original, Production, Arrangement, Engineering, Score]
       - { name: role, label: 'Role (e.g. Producer, Mix Engineer)', widget: string, required: false }
-      - { name: cover, label: Cover Image, widget: image, required: false }
       - name: audio
         label: Audio File
         widget: file

@@ -17,9 +17,9 @@ const allTags = [...new Set(works.flatMap((w) => w.data.tags))].filter(Boolean).
     </div>
 
     <div class="filter-bar" data-animate aria-label="Filter works">
-      <button class="chip chip--active" data-filter="all">All</button>
-      {typeFilters.map((t) => <button class="chip" data-filter={t}>{t}</button>)}
-      {allTags.map((tag) => <button class="chip" data-filter={tag}>{tag}</button>)}
+      <button class="chip chip--active" data-filter="all" aria-pressed="true">All</button>
+      {typeFilters.map((t) => <button class="chip" data-filter={t} aria-pressed="false">{t}</button>)}
+      {allTags.map((tag) => <button class="chip" data-filter={tag} aria-pressed="false">{tag}</button>)}
     </div>
 
     {
@@ -128,8 +128,9 @@ const allTags = [...new Set(works.flatMap((w) => w.data.tags))].filter(Boolean).
     chips.forEach((chip) => {
       chip.addEventListener('click', () => {
         const filter = chip.dataset.filter ?? 'all';
-        chips.forEach((c) => c.classList.remove('chip--active'));
+        chips.forEach((c) => { c.classList.remove('chip--active'); c.setAttribute('aria-pressed', 'false'); });
         chip.classList.add('chip--active');
+        chip.setAttribute('aria-pressed', 'true');
         cards.forEach((card) => {
           if (filter === 'all') { card.classList.remove('hidden'); return; }
           const type = card.dataset.type ?? '';

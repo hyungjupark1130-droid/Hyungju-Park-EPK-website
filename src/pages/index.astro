@@ -1,13 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import MusicSection from '../components/sections/MusicSection.astro';
 import RecentWorksSection from '../components/sections/RecentWorksSection.astro';
 import AboutSection from '../components/sections/AboutSection.astro';
 import ContactSection from '../components/sections/ContactSection.astro';
-
-const about = await getEntry('about', 'index');
-const shortBio = about?.data.short_bio ?? '';
 ---
 
 <BaseLayout title="Home">
@@ -23,10 +20,10 @@ const shortBio = about?.data.short_bio ?? '';
           <span class="hero__discipline">Musician&thinsp;·&thinsp;Producer&thinsp;·&thinsp;Engineer</span>
           <span class="hero__school">Guildhall School of Music</span>
         </div>
-        <div class="hero__scroll-hint" aria-hidden="true">
-          <a href="#music" class="scroll-cta">
-            <span class="scroll-cta__label">Scroll</span>
-            <span class="scroll-cta__line"></span>
+        <div class="hero__scroll-hint">
+          <a href="#music" class="scroll-cta" aria-label="Scroll to Music section">
+            <span class="scroll-cta__label" aria-hidden="true">Scroll</span>
+            <span class="scroll-cta__line" aria-hidden="true"></span>
           </a>
         </div>
       </div>

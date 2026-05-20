@@ -8,7 +8,6 @@ const {
   currently = '',
   credits_recording = [],
   cv = [],
-  recent_works = [],
 } = about?.data ?? {};
 
 const bioParagraphs = long_bio.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
@@ -27,7 +26,7 @@ const bioParagraphs = long_bio.split(/\n\n+/).map((p) => p.trim()).filter(Boolea
         {
           portrait && (
             <div class="portrait-wrap" data-animate>
-              <img src={portrait} alt="Hyungju Park" class="portrait" />
+              <img src={portrait} alt="Hyungju Park" class="portrait" width="180" height="240" />
             </div>
           )
         }

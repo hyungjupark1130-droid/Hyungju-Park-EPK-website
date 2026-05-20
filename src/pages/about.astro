@@ -9,7 +9,6 @@ const {
   currently = '',
   credits_recording = [],
   cv = [],
-  recent_works = [],
 } = about?.data ?? {};
 
 const bioParagraphs = long_bio.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
@@ -20,7 +19,7 @@ const bioParagraphs = long_bio.split(/\n\n+/).map((p) => p.trim()).filter(Boolea
     {
       portrait && (
         <div class="about__portrait-wrap" data-animate>
-          <img src={portrait} alt="Hyungju Park" class="about__portrait" />
+          <img src={portrait} alt="Hyungju Park" class="about__portrait" width="320" height="427" />
         </div>
       )
     }
@@ -166,31 +165,6 @@ const bioParagraphs = long_bio.split(/\n\n+/).map((p) => p.trim()).filter(Boolea
     padding: 1rem 0;
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
-  }
-
-  .about__list-main-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .about__work-link {
-    font-size: 0.95rem;
-    font-weight: 500;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1px;
-    transition: border-color var(--transition), color var(--transition);
-  }
-
-  .about__work-link:hover {
-    color: var(--fg);
-    border-color: var(--fg);
-  }
-
-  .about__work-desc {
-    font-size: 0.8rem;
-    color: var(--muted);
-    line-height: 1.5;
   }
 
   .about__list-main {

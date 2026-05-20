@@ -9,8 +9,7 @@ const { src, title } = Astro.props;
 
 <div class="player" data-player>
   <audio preload="metadata" controlsList="nodownload" data-audio>
-    <source src={src} type="audio/mpeg" />
-    <source src={src} type="audio/aac" />
+    <source src={src} type={src.endsWith('.aac') ? 'audio/aac' : 'audio/mpeg'} />
   </audio>
 
   <button class="player__btn" aria-label="Play" data-play-btn>

@@ -1,6 +1,7 @@
 ---
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { getEntry } from 'astro:content';
 import '../styles/global.css';
 
 interface Props {
@@ -9,13 +10,16 @@ interface Props {
   ogImage?: string;
 }
 
-const {
-  title,
-  description = 'Hyungju Park — Musician, Producer, Sound Engineer',
-  ogImage,
-} = Astro.props;
+const { title, description, ogImage } = Astro.props;
 
+const siteSettings = await getEntry('settings', 'index');
+const resolvedDescription =
+  description ??
+  siteSettings?.data.meta_description ??
+  'Hyungju Park — Musician, Producer, Sound Engineer';
+const resolvedOgImage = ogImage ?? siteSettings?.data.og_image;
 const pageTitle = title === 'Home' ? 'Hyungju Park' : `${title} — Hyungju Park`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
 <!doctype html>
@@ -24,17 +28,22 @@ const pageTitle = title === 'Home' ? 'Hyungju Park' : `${title} — Hyungju Park
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={resolvedDescription} />
     <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={resolvedDescription} />
     <meta property="og:type" content="website" />
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    {resolvedOgImage && <meta property="og:image" content={resolvedOgImage} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Urbanist:wght@300;400;500;600;700&display=swap" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="canonical" href={canonicalUrl} />
   </head>
   <body>
+    <a href="#main-content" class="sr-only focusable">Skip to content</a>
     <Nav />
-    <main>
+    <main id="main-content">
       <slot />
     </main>
     <Footer />

@@ -198,17 +198,17 @@ const { contact_email = '', socials = [] } = settings?.data ?? {};
   .form__input {
     font-family: var(--font-body);
     font-size: 0.95rem;
-    color: var(--black);
+    color: var(--fg);
     background: none;
     border: none;
     border-bottom: 1px solid var(--gray-rule);
     padding: 0.5rem 0;
-    outline: none;
+    outline: 2px solid transparent;
     width: 100%;
     transition: border-color var(--transition);
   }
 
-  .form__input:focus {
+  .form__input:focus-visible {
     border-color: var(--fg);
   }
 

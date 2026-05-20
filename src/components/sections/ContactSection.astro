@@ -169,12 +169,12 @@ const { contact_email = '', socials = [] } = settings?.data ?? {};
     border: none;
     border-bottom: 1px solid var(--border);
     padding: 0.5rem 0;
-    outline: none;
+    outline: 2px solid transparent;
     width: 100%;
     transition: border-color var(--transition);
   }
 
-  .input:focus { border-color: var(--fg); }
+  .input:focus-visible { border-color: var(--fg); }
   .textarea { resize: vertical; min-height: 100px; }
 
   .submit {

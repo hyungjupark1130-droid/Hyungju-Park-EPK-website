@@ -7,12 +7,12 @@ const works = defineCollection({
     year: z.number(),
     type: z.enum(['Original', 'Production', 'Arrangement', 'Engineering', 'Score']),
     role: z.string().optional(),
-    cover: z.string().optional(),
-    audio: z.string().optional(),
-    video_url: z.string().optional(),
+    cover: z.string().startsWith('/uploads/').optional(),
+    audio: z.string().startsWith('/uploads/').optional(),
+    video_url: z.string().url().optional(),
     external_links: z.array(z.object({
       label: z.string(),
-      url: z.string(),
+      url: z.string().url(),
     })).optional().default([]),
     credits: z.string().optional(),
     featured: z.boolean().default(false),
@@ -27,7 +27,7 @@ const about = defineCollection({
   schema: z.object({
     short_bio: z.string(),
     long_bio: z.string(),
-    portrait: z.string().optional(),
+    portrait: z.string().startsWith('/uploads/').optional(),
     currently: z.string(),
     credits_recording: z.array(z.object({
       project: z.string(),
@@ -42,7 +42,7 @@ const about = defineCollection({
     recent_works: z.array(z.object({
       title: z.string(),
       description: z.string().optional(),
-      url: z.string().optional(),
+      url: z.string().url().optional(),
       year: z.number().optional(),
     })).default([]),
   }),
@@ -54,7 +54,7 @@ const settings = defineCollection({
     contact_email: z.string(),
     socials: z.array(z.object({
       platform: z.string(),
-      url: z.string(),
+      url: z.string().url(),
     })).default([]),
     meta_description: z.string().optional(),
     og_image: z.string().optional(),
